@@ -20,17 +20,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <p>An example of <code>&lt;select-single&gt;</code>:</p>
 
-    <button>Say Something</button>
-
-    <select-single author='{"name": "Lord Meowser", "image": "http://placekitten.com/g/200/300"}' fancy>
-      <h2>Hello select-single</h2>
+    <select-single backend="http://demo9131812.mockable.io/items" name="member_id" selected='{"title": "Lord Meowser", "id": "9999" }'>
     </select-single>
 
-    <script>
-      document.querySelector('button').addEventListener('click', function() {
-        alert(document.querySelector('select-single').sayHello('Hallo!'));
-      });
-    </script>
 
   </body>
 </html>
