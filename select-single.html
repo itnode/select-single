@@ -9,7 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
-
+<link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html">
 <!--
 An element providing a solution to no problem in particular.
 
@@ -27,7 +27,6 @@ Example:
     :host {
       display: block;
       box-sizing: border-box;
-      border: 1px solid #EEE;
     }
 
     ul {
@@ -35,29 +34,87 @@ Example:
         display: inline;
     }
 
-  </style>
+    .item {
+
+        border-top: 1px solid;
+        padding: 3px;
+        margin: 0;
+        display: block;
+        cursor: pointer;
+    }
+
+    input:focus {
+
+        background: #eee;
+    }
+
+    .item.active,
+    .item:hover,
+    .item:focus {
+
+        background: #eee;
+    }
+
+    #container {
+        position: relative;
+        display: inline-block;
+        width: 200px;
+    }  
+
+    #container input {
+        display: block;
+    }   
+
+    #result {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        width: 200px;
+        padding: 5px;
+    }
+
+   
+    #selected {
+      border: 1px solid #EEE;
+      padding: 2px;
+     display: inline-block;
+   }
+
+</style>
 
   <template>
 
-      <template is="dom-if" if="{{selected}}">
-          <strong><span>{{selected.title}}</span></strong><span>{{selected.id}}</span>
-          <button on-click="reset">X</button>
-          <input type="hidden" name$="{{name}}" value$="{{selected.id}}" />
-      </template>
+    <template is="dom-if" if="{{selected}}">
+       
+        <div id="selected">
+ 
+            <strong><span>{{selected.title}}</span></strong> <span>{{selected.id}}</span>
+            <button on-click="reset">X</button>
+            <input type="hidden" name$="{{name}}" value$="{{selected.id}}" />
 
-    <input id="query" on-keydown="setajax" type="text" value=""/>
+        </div>
 
-    <template is="dom-repeat" items="{{items}}">
-        <p on-click="set_select" result-id$="{{ index }}">[[item.title]]</p>
     </template>
+
+    <div id="container">
+
+        <input id="query" on-keyup="setajax" type="text" value="" autocomplete="off"/>
+
+        <div id="result"><template id="resultlist" is="dom-repeat" items="{{items}}">
+            <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="set_select" result-id$="{{ index }}">[[item.title]]</span>
+        </template></div>
+
+    </div>
 
    <iron-ajax
     id="backend"
-    params='{"alt":"json", "q":"chrome"}'
     handle-as="json"
     on-response="hresponse"
-    debounce-duration="500"></iron-ajax> 
+    debounce-duration="250"></iron-ajax> 
 
+    <iron-a11y-keys target="{{}}" keys="pagedown down" on-keys-pressed="select_down"></iron-a11y-keys>
+    <iron-a11y-keys target="{{}}" keys="pageup up"     on-keys-pressed="select_up"></iron-a11y-keys>
+    <iron-a11y-keys target="{{}}" keys="enter"         on-keys-pressed="select_enter"></iron-a11y-keys>
 
 
   </template>
@@ -70,9 +127,87 @@ Example:
 
     is: 'select-single',
 
-    setajax: function() {
+    update_items: function() {
+
+        var these = this;
+       
+        var new_items = [];
+
+        these.items.forEach(function(item,idx,arr) {
+
+            item.class = "item";
+
+            if ( idx === these.preselected ) {
+
+                console.log("Match " + idx);
+                item.class = "item active";
+            }
         
-        this.$.backend.generateRequest();
+            these.set('items.'+idx+ '.class' ,item.class);
+            
+        });
+    },
+
+    arrayItem: function(change, index, path) {
+        // this.get(path, root) returns a value for a path
+        // relative to a root object.
+        return this.get(path, change.base[index]);
+    },
+
+    select_enter: function() {
+        
+        var idx             = this.preselected; 
+        this.selected       = this.items[idx];
+        this.preselected    = -1;
+        this.$.query.value  = "";
+        this.query          = "";
+        this.items          = [];
+    },
+
+    select_down: function() {
+
+        if (this.items.length === 0) 
+            return;
+
+        if (this.preselected < (this.items.length - 1 )) {
+        
+            this.preselected++;
+
+        } else { 
+
+            this.preselected = -1;
+        }
+            
+        this.update_items();
+            
+        return false;
+    },
+
+
+    select_up: function() {
+
+        if (this.items.length === 0) 
+            return;
+            
+        if (this.preselected > -1) {
+         
+            this.preselected--; 
+        }
+
+        this.update_items();
+        
+        return false;
+    },
+
+    setajax: function() {
+       
+        if( this.query !== this.$.query.value ) {      
+
+            this.query = this.$.query.value;
+       
+            this.$.backend.params = { query: this.query };
+            this.$.backend.generateRequest();
+        }
     },
 
     reset: function() {
@@ -84,17 +219,17 @@ Example:
     hresponse: function(request) {
   
         // assign items to current instance
-        this.items = request.detail.response.items;
-   
+        this.items       = request.detail.response.items;
+        this.update_items();
     },
 
     set_select: function(e) {
 
         // get the result-id from the clicked target
-        var idx = e.target.attributes.getNamedItem('result-id').value;
-        this.selected = this.items[idx];
-        this.$.query.value = "";
-        this.items    = [];
+        var idx             = e.target.attributes.getNamedItem('result-id').value;
+        this.selected       = this.items[idx];
+        this.$.query.value  = "";
+        this.items          = [];
      },
 
     properties: {
@@ -112,7 +247,10 @@ Example:
         /**
         * 'items' the list of items
         */        
-        items:      Array,
+        items:    {
+            type:   Array,
+            notify: true
+        },
         
         /** 
         * 'name' cgi name
@@ -123,7 +261,13 @@ Example:
           * 'backend' - URL for the backend
         */
         backend:    String,
-            
+        
+        /**
+          * 
+          */
+        preselected: Number,
+
+        query: String,
     },
 
  
@@ -157,35 +301,7 @@ Example:
     },
 
     // Element Behavior
-
-    /**
-     * The `select-single-lasers` event is fired whenever `fireLasers` is called.
-     *
-     * @event select-single-lasers
-     * @detail {{sound: String}}
-     */
-
-    /**
-     * Sometimes it's just nice to say hi.
-     *
-     * @param {string} greeting A positive greeting.
-     * @return {string} The full greeting.
-     */
-    sayHello: function(greeting) {
-      var response = greeting || 'Hello World!';
-      return 'select-single says, ' + response;
-    },
-
-    /**
-     * Attempts to destroy this element's enemies with an any beam of light!
-     *
-     * Or, at least, dispatches an event in the vain hope that someone else will
-     * do the zapping.
-     */
-    fireLasers: function() {
-      this.fire('select-single-lasers', {sound: 'Pew pew!'});
-    }
-
+  
   });
 
 </script>
