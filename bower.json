@@ -1,10 +1,10 @@
 {
   "name": "select-single",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "authors": [
-    "Anonymous <anonymous@example.com>"
+    "Jens Gassmann <jens.gassmann@atomix.de>"
   ],
-  "description": "An element providing a solution to no problem in particular.",
+  "description": "Autocompleting select.",
   "keywords": [
     "web-component",
     "web-components",

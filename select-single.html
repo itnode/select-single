@@ -162,6 +162,12 @@ Example:
         this.$.query.value  = "";
         this.query          = "";
         this.items          = [];
+
+        if ( this.hide_on_select ) {
+
+            this.$.query.style.display = "none";
+ 
+        }
     },
 
     select_down: function() {
@@ -214,6 +220,10 @@ Example:
 
         this.selected = undefined;
         this.items    = [];
+    
+        if ( this.hide_on_select ) {
+            this.$.query.style.display = "inline-block";
+        }
     },
 
     hresponse: function(request) {
@@ -230,14 +240,28 @@ Example:
         this.selected       = this.items[idx];
         this.$.query.value  = "";
         this.items          = [];
-     },
+        if ( this.hide_on_select )  {
+            this.$.query.style.display = "none";
+        }
+      },
 
     properties: {
 
       /**
        * `multiple` indicates that the element should handle more then one value.
+       * NOT IMPLEMENTED
        */
         multiple:  Boolean,
+
+
+        /**
+          * 'hide_on_select' - when selected, hide input
+          */
+        hide_on_select: {
+
+            type: Boolean,
+            value: true,
+        },
 
         /**
         * 'selected' the current selected object
