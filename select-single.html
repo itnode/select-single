@@ -89,9 +89,9 @@ Example:
        
         <div id="selected">
  
-            <strong><span>{{selected.title}}</span></strong> <span>{{selected.id}}</span>
+            <strong><span>{{selected._title}}</span></strong> <span>{{selected.id}}</span>
             <button type="button" on-click="reset">X</button>
-            <input type="hidden" name$="{{name}}" value$="{{selected.id}}" />
+            <input type="hidden" name$="{{name}}" value$="{{selected._return}}" />
 
         </div>
 
@@ -102,7 +102,7 @@ Example:
         <input id="query" on-keyup="setajax" on-keydown="preventx" type="text" value="" autocomplete="off"/>
 
         <div id="result"><template id="resultlist" is="dom-repeat" items="{{items}}">
-            <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}">[[item.title]]</span>
+            <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}">[[item._title]]</span>
         </template></div>
 
     </div>
@@ -124,6 +124,47 @@ Example:
 
 <script>
 
+(function (global) {
+
+  var Template = function (str) {
+    this.template = str || '';
+
+    Object.defineProperties( this, {
+      modifier: {
+        writable: true,
+        value: this._modifier
+      }
+    });
+
+    return this;
+  }
+
+  Object.defineProperties( Template.prototype, {
+    _regex: {
+      writable: false,
+      value: /#{(((?!{).)*)}/g
+    },
+
+    _modifier: {
+      writable: false,
+      value: function ( match, key ) {
+        return this[key] || '';
+      }
+    },
+
+    parse: {
+      writable: false,
+      value: function (data) {
+        return this.template.replace(this._regex, this.modifier.bind(data));
+      }
+    }
+  });
+
+  global['Template'] = Template;
+
+}(this));
+
+
   Polymer({
 
     is: 'select-single',
@@ -135,6 +176,8 @@ Example:
         var new_items = [];
 
         these.items.forEach(function(item,idx,arr) {
+
+            item._title = these.template_title.parse(item);
 
             item.class = "item";
 
@@ -173,7 +216,11 @@ Example:
 
     select_set: function(set) {
 
+        set._return = this.template_return.parse(set);
+        set._title  = this.template_title.parse(set);
+
         this.selected       = set;
+
         this.$.query.value  = "";
         this.query          = "";
         this.items          = [];
@@ -315,6 +362,21 @@ Example:
         preselected: Number,
 
         query: String,
+
+        /**
+         * 'format' default id
+        */
+
+        format_return: { 
+            
+            type: String,
+            value: "#{id}"
+        },
+
+        format_title: {
+            type: String,
+            value: "#{title}",
+        }
     },
 
  
@@ -339,9 +401,16 @@ Example:
 
         this.$.backend.url = this.backend;
 
+        this.template_return = new Template(this.format_return);
+        this.template_title = new Template(this.format_title);
+
         if ( this.hide_on_select  && typeof this.selected === "object" )  {
             this.$.query.style.display = "none";
-        }
+
+            this.selected._title = this.template_title.parse(this.selected);
+            this.selected._return = this.template_return.parse(this.selected);
+         }
+
     },
 
     detached: function() {
