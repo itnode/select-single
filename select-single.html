@@ -41,6 +41,7 @@ Example:
         margin: 0;
         display: block;
         cursor: pointer;
+        background: #fff;
     }
 
     input:focus {
@@ -57,8 +58,8 @@ Example:
 
     #container {
         position: relative;
-        display: inline-block;
-        width: 200px;
+        display: block;
+        z-index: 9999;
     }  
 
     #container input {
@@ -69,8 +70,8 @@ Example:
         position: absolute;
         top: 20px;
         left: 0;
-        width: 200px;
-        padding: 5px;
+        width: 100%;
+        padding: 0;
     }
 
    
@@ -101,7 +102,7 @@ Example:
         <input id="query" on-keyup="setajax" type="text" value="" autocomplete="off"/>
 
         <div id="result"><template id="resultlist" is="dom-repeat" items="{{items}}">
-            <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="set_select" result-id$="{{ index }}">[[item.title]]</span>
+            <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}">[[item.title]]</span>
         </template></div>
 
     </div>
@@ -139,7 +140,6 @@ Example:
 
             if ( idx === these.preselected ) {
 
-                console.log("Match " + idx);
                 item.class = "item active";
             }
         
@@ -154,25 +154,40 @@ Example:
         return this.get(path, change.base[index]);
     },
 
-    select_enter: function() {
-        
-        var idx             = this.preselected; 
-        this.selected       = this.items[idx];
-        this.preselected    = -1;
-        this.$.query.value  = "";
-        this.query          = "";
-        this.items          = [];
+    select_enter: function(e) {
+       
+        e.preventDefault();
 
-        if ( this.hide_on_select ) {
-
-            this.$.query.style.display = "none";
- 
-        }
-
+        var idx             = this.preselected;
+        this.select_set(this.items[idx]);
         return false;
     },
 
-    select_down: function() {
+    
+    select_click: function(e) {
+
+        e.preventDefault();
+
+        // get the result-id from the clicked target
+        var idx             = e.target.attributes.getNamedItem('result-id').value;
+        this.select_set(this.items[idx]);
+    },
+
+    select_set: function(set) {
+
+        this.selected       = set;
+        this.$.query.value  = "";
+        this.items          = [];
+
+        if ( this.hide_on_select )  {
+            this.$.query.style.display = "none";
+        }
+
+    },
+
+
+    select_down: function(e) {
+
 
         if (this.items.length === 0) 
             return;
@@ -187,12 +202,13 @@ Example:
         }
             
         this.update_items();
+        
             
         return false;
     },
 
 
-    select_up: function() {
+    select_up: function(e) {
 
         if (this.items.length === 0) 
             return;
@@ -207,9 +223,12 @@ Example:
         return false;
     },
 
-    setajax: function() {
+    setajax: function(e) {
+        
+        e.preventDefault();
        
-        if( this.query !== this.$.query.value ) {      
+
+        if( this.query !== this.$.query.value && this.$.query.value !== "" ) {      
 
             this.query = this.$.query.value;
        
@@ -218,13 +237,16 @@ Example:
         }
     },
 
-    reset: function() {
+    reset: function(e) {
+
+        e.preventDefault();
 
         this.selected = undefined;
         this.items    = [];
     
         if ( this.hide_on_select ) {
             this.$.query.style.display = "inline-block";
+            this.$.query.focus();
         }
 
         return false;
@@ -236,18 +258,6 @@ Example:
         this.items       = request.detail.response.items;
         this.update_items();
     },
-
-    set_select: function(e) {
-
-        // get the result-id from the clicked target
-        var idx             = e.target.attributes.getNamedItem('result-id').value;
-        this.selected       = this.items[idx];
-        this.$.query.value  = "";
-        this.items          = [];
-        if ( this.hide_on_select )  {
-            this.$.query.style.display = "none";
-        }
-      },
 
     properties: {
 
@@ -319,6 +329,13 @@ Example:
       // loading resources, etc).
 
         this.$.backend.url = this.backend;
+
+
+        if ( this.hide_on_select && this.selected !== undefined )  {
+            this.$.query.style.display = "none";
+        }
+
+
     },
 
     detached: function() {
