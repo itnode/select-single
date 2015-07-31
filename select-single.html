@@ -339,8 +339,7 @@ Example:
 
         this.$.backend.url = this.backend;
 
-
-        if ( this.hide_on_select === true && this.selected !== undefined )  {
+        if ( this.hide_on_select  && typeof this.selected === "object" )  {
             this.$.query.style.display = "none";
         }
     },
