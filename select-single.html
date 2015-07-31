@@ -25,13 +25,19 @@ Example:
 
   <style>
     :host {
-      display: block;
+      display: inline-block;
       box-sizing: border-box;
     }
 
     ul {
 
         display: inline;
+    }
+        
+    .delete {
+
+        margin: 0 0 0 6px;
+            
     }
 
     .item {
@@ -59,7 +65,6 @@ Example:
     #container {
         position: relative;
         display: block;
-        z-index: 9999;
     }  
 
     #container input {
@@ -72,12 +77,13 @@ Example:
         left: 0;
         width: 100%;
         padding: 0;
+        z-index: 9999;
     }
 
    
     #selected {
       border: 1px solid #EEE;
-      padding: 2px;
+      padding: 2px 2px 2px 6px ;
      display: inline-block;
    }
 
@@ -89,8 +95,8 @@ Example:
        
         <div id="selected">
  
-            <strong><span>{{selected._title}}</span></strong> <span>{{selected.id}}</span>
-            <button type="button" on-click="reset">X</button>
+            <span><strong>{{selected._title}}</strong>
+            <button type="button" class="delete" on-click="reset">X</button>
             <input type="hidden" name$="{{name}}" value$="{{selected._return}}" />
 
         </div>
@@ -99,7 +105,7 @@ Example:
 
     <div id="container">
 
-        <input id="query" on-keyup="setajax" on-keydown="preventx" type="text" value="" autocomplete="off"/>
+        <input id="query" on-keyup="setajax" on-keydown="preventx" type="text" value="" placeholder$="{{placeholder}}" autocomplete="off"/>
 
         <div id="result"><template id="resultlist" is="dom-repeat" items="{{items}}">
             <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}">[[item._title]]</span>
@@ -376,7 +382,15 @@ Example:
         format_title: {
             type: String,
             value: "#{title}",
+        },
+
+        placeholder: {
+
+            type: String,
+            value: "Search",
         }
+
+        
     },
 
  
