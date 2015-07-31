@@ -168,6 +168,8 @@ Example:
             this.$.query.style.display = "none";
  
         }
+
+        return false;
     },
 
     select_down: function() {
@@ -224,6 +226,8 @@ Example:
         if ( this.hide_on_select ) {
             this.$.query.style.display = "inline-block";
         }
+
+        return false;
     },
 
     hresponse: function(request) {
