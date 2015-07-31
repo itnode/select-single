@@ -90,7 +90,7 @@ Example:
         <div id="selected">
  
             <strong><span>{{selected.title}}</span></strong> <span>{{selected.id}}</span>
-            <button on-click="reset">X</button>
+            <button type="button" on-click="reset">X</button>
             <input type="hidden" name$="{{name}}" value$="{{selected.id}}" />
 
         </div>
@@ -99,7 +99,7 @@ Example:
 
     <div id="container">
 
-        <input id="query" on-keyup="setajax" type="text" value="" autocomplete="off"/>
+        <input id="query" on-keyup="setajax" on-keydown="preventx" type="text" value="" autocomplete="off"/>
 
         <div id="result"><template id="resultlist" is="dom-repeat" items="{{items}}">
             <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}">[[item.title]]</span>
@@ -157,7 +157,6 @@ Example:
     select_enter: function(e) {
        
         e.preventDefault();
-
         var idx             = this.preselected;
         this.select_set(this.items[idx]);
         return false;
@@ -167,27 +166,27 @@ Example:
     select_click: function(e) {
 
         e.preventDefault();
-
-        // get the result-id from the clicked target
         var idx             = e.target.attributes.getNamedItem('result-id').value;
         this.select_set(this.items[idx]);
+        return false;
     },
 
     select_set: function(set) {
 
         this.selected       = set;
         this.$.query.value  = "";
+        this.query          = "";
         this.items          = [];
 
-        if ( this.hide_on_select )  {
+        if ( this.hide_on_select === true )  {
             this.$.query.style.display = "none";
         }
 
+        return false;
     },
 
 
     select_down: function(e) {
-
 
         if (this.items.length === 0) 
             return;
@@ -223,18 +222,26 @@ Example:
         return false;
     },
 
+    preventx: function(e) {
+
+        if (  (e.keyCode || e.which || e.charCode || 0) == 13 ) {
+            this.select_enter(e);
+        }
+    },
+
     setajax: function(e) {
         
         e.preventDefault();
        
-
-        if( this.query !== this.$.query.value && this.$.query.value !== "" ) {      
-
+        if( this.query !== this.$.query.value ) {      
+        
             this.query = this.$.query.value;
        
             this.$.backend.params = { query: this.query };
             this.$.backend.generateRequest();
         }
+
+        return false;
     },
 
     reset: function(e) {
@@ -244,7 +251,7 @@ Example:
         this.selected = undefined;
         this.items    = [];
     
-        if ( this.hide_on_select ) {
+        if ( this.hide_on_select === true ) {
             this.$.query.style.display = "inline-block";
             this.$.query.focus();
         }
@@ -253,10 +260,12 @@ Example:
     },
 
     hresponse: function(request) {
-  
-        // assign items to current instance
-        this.items       = request.detail.response.items;
-        this.update_items();
+
+        if ( request.detail.response !== null ) { 
+
+            this.items       = request.detail.response.items;
+            this.update_items();
+        }
     },
 
     properties: {
@@ -331,11 +340,9 @@ Example:
         this.$.backend.url = this.backend;
 
 
-        if ( this.hide_on_select && this.selected !== undefined )  {
+        if ( this.hide_on_select === true && this.selected !== undefined )  {
             this.$.query.style.display = "none";
         }
-
-
     },
 
     detached: function() {
