@@ -1,6 +1,6 @@
 # select-single
 
-An element to provide an select for huge value lists. It is requesting an Backend URL to fetch matching list items and shows them.
+An element to provide a select for huge value lists. It is requesting an Backend URL to fetch matching list items and shows them.
 Keyboard and Mouse can be used to select an Entry. The defined Entry Value will be placed in a hidden input in the ShadowDOM to 
 provide the Value per HTTP Requst.
 
