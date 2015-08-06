@@ -1,7 +1,30 @@
 # select-single
 
-An element providing a starting point for your own reusable Polymer elements.
+An element to provide a select for huge value lists. It is requesting an Backend URL to fetch matching list items and shows them.
+Keyboard and Mouse can be used to select an Entry. The defined Entry Value will be placed in a hidden input in the ShadowDOM to 
+provide the Value per HTTP Requst.
 
+## Synopsis
+
+    <select-single backend="http://private-c3fe6-selectsingle.apiary-mock.com/items" name="member_id" selected='{"title": "Lord Meowser", "id": "9999" }'>
+    </select-single>
+
+The *backend* Attribute stores the provided Backend JSON.
+The *selected* Attribute stores the JSON of the selected Entry. You can provide a Default with it.
+
+## Screenshots
+
+The Search Box:
+
+![The Search](https://raw.githubusercontent.com/itnode/select-single/master/screenshots/001.png)
+
+The Value List:
+
+![Value List](https://raw.githubusercontent.com/itnode/select-single/master/screenshots/002.png)
+
+The Selected Entry
+
+![Selected Entry](https://raw.githubusercontent.com/itnode/select-single/master/screenshots/003.png)
 
 ## Dependencies
 
