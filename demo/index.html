@@ -20,13 +20,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <p>An example of <code>&lt;select-single&gt;</code>:</p>
 
+    <form method="get">
         
 
-        <select-single backend="http://private-c3fe6-selectsingle.apiary-mock.com/items" name="member_id" selected='{"title": "Lord Meowser", "id": "9999" }'>
+        <select-single backend="http://private-c3fe6-selectsingle.apiary-mock.com/items" selected='{"title": "Lord Meowser", "id": "9999" }'>
+            <input type="hidden" name="member_id" value="" />
         </select-single>
-        
-        <form method="get">
-        
     
 
         <button type="submit">Submit </button>

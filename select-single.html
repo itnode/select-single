@@ -15,8 +15,8 @@ An element providing a solution to no problem in particular.
 
 Example:
 
-    <select-single name="user_id" selected="" backend="http://demo9131812.mockable.io/items">
-        
+    <select-single selected="" backend="http://demo9131812.mockable.io/items">
+        <input type="hidden" name="member_id" /> 
     </select-single>
 
 @demo
@@ -42,12 +42,13 @@ Example:
 
     .item {
 
-        border-top: 1px solid;
+        border-top: 1px solid #eee;
         padding: 3px;
         margin: 0;
         display: block;
         cursor: pointer;
         background: #fff;
+        text-align: left;
     }
 
     input:focus {
@@ -78,27 +79,31 @@ Example:
         width: 100%;
         padding: 0;
         z-index: 9999;
+        box-shadow: 10px 9px 40px -2px rgba(217,217,217,1);
+        background: #fff;
+
+
     }
 
    
     #selected {
       border: 1px solid #EEE;
       padding: 2px 2px 2px 6px ;
-     display: inline-block;
+      display: inline-block;
    }
 
 </style>
 
   <template>
 
+    <content></content>
+    
     <template is="dom-if" if="{{selected}}">
        
         <div id="selected">
  
             <span><strong>{{selected._title}}</strong>
             <button type="button" class="delete" on-click="reset">X</button>
-            <input type="hidden" name$="{{name}}" value$="{{selected._return}}" />
-
         </div>
 
     </template>
@@ -225,7 +230,8 @@ Example:
         set._return = this.template_return.parse(set);
         set._title  = this.template_title.parse(set);
 
-        this.selected       = set;
+        this.selected            = set;
+        this.return_hidden.value = set._return;
 
         this.$.query.value  = "";
         this.query          = "";
@@ -301,8 +307,9 @@ Example:
 
         e.preventDefault();
 
-        this.selected = undefined;
-        this.items    = [];
+        this.return_hidden.value = "";
+        this.selected            = undefined;
+        this.items               = [];
     
         if ( this.hide_on_select === true ) {
             this.$.query.style.display = "inline-block";
@@ -353,11 +360,6 @@ Example:
         },
         
         /** 
-        * 'name' cgi name
-        */
-        name: String,
-
-        /** 
           * 'backend' - URL for the backend
         */
         backend:    String,
@@ -387,7 +389,7 @@ Example:
         placeholder: {
 
             type: String,
-            value: "Search",
+            value: "Type for search",
         }
 
         
@@ -415,13 +417,18 @@ Example:
 
         this.$.backend.url = this.backend;
 
+        this.return_hidden =  Polymer.dom(this).querySelector('input');
+
         this.template_return = new Template(this.format_return);
         this.template_title = new Template(this.format_title);
+            
 
         if ( this.hide_on_select  && typeof this.selected === "object" )  {
+
             this.$.query.style.display = "none";
 
-            this.selected._title = this.template_title.parse(this.selected);
+            this.return_hidden.value     = this.template_return.parse(this.selected);
+            this.selected._title  = this.template_title.parse(this.selected);
             this.selected._return = this.template_return.parse(this.selected);
          }
 
