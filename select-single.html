@@ -10,6 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html">
+
+<script src="../uri.js/src/URI.min.js"></script>
 <!--
 An element providing a solution to no problem in particular.
 
@@ -27,6 +29,8 @@ Example:
     :host {
       display: inline-block;
       box-sizing: border-box;
+      width: 300px;
+      cursor: pointer;
     }
 
     ul {
@@ -37,7 +41,7 @@ Example:
     .delete {
 
         margin: 0 0 0 6px;
-            
+        float: right;         
     }
 
     .item {
@@ -49,6 +53,11 @@ Example:
         cursor: pointer;
         background: #fff;
         text-align: left;
+    }
+
+    input {
+
+        width: 100%;
     }
 
     input:focus {
@@ -76,20 +85,20 @@ Example:
         position: absolute;
         top: 20px;
         left: 0;
-        width: 100%;
+        width: 500px;
         padding: 0;
         z-index: 9999;
         box-shadow: 10px 9px 40px -2px rgba(217,217,217,1);
         background: #fff;
-
-
+        max-height: 120px;
+        overflow-y: scroll;
     }
 
    
     #selected {
       border: 1px solid #EEE;
       padding: 2px 2px 2px 6px ;
-      display: inline-block;
+      display: block;
    }
 
 </style>
@@ -98,19 +107,21 @@ Example:
 
     <content></content>
     
-    <template is="dom-if" if="{{selected}}">
+    <template is="dom-if" if="{{selected_private}}">
        
-        <div id="selected">
- 
-            <span><strong>{{selected._title}}</strong>
-            <button type="button" class="delete" on-click="reset">X</button>
+        <div id="selected" on-click="show_input">
+
+            <strong >{{selected_private._title}}</strong>
+            <button type="button" class="delete" on-click="reset_to_null">X</button>
         </div>
 
     </template>
+   
 
     <div id="container">
 
-        <input id="query" on-keyup="setajax" on-keydown="preventx" type="text" value="" placeholder$="{{placeholder}}" autocomplete="off"/>
+        <input id="query" on-keyup="handleup" on-keydown="handledown" type="text" value="" placeholder$="{{placeholder}}" autocomplete="off"/>
+
 
         <div id="result"><template id="resultlist" is="dom-repeat" items="{{items}}">
             <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}">[[item._title]]</span>
@@ -122,12 +133,12 @@ Example:
     id="backend"
     handle-as="json"
     on-response="hresponse"
-    debounce-duration="250"></iron-ajax> 
+    debounce-duration="150"></iron-ajax> 
 
     <iron-a11y-keys target="{{}}" keys="pagedown down" on-keys-pressed="select_down"></iron-a11y-keys>
     <iron-a11y-keys target="{{}}" keys="pageup up"     on-keys-pressed="select_up"></iron-a11y-keys>
     <iron-a11y-keys target="{{}}" keys="enter"         on-keys-pressed="select_enter"></iron-a11y-keys>
-
+    <iron-a11y-keys target="{{}}" keys="esc"           on-keys-pressed="select_esc"></iron-a11y-keys>
 
   </template>
 
@@ -225,12 +236,24 @@ Example:
         return false;
     },
 
+    select_esc: function(e) {
+
+        e.preventDefault();
+        this.items = [];
+
+        this.reset_to_preset();
+
+        return false;
+    },
+
     select_set: function(set) {
+
+        console.log("Select set");
 
         set._return = this.template_return.parse(set);
         set._title  = this.template_title.parse(set);
 
-        this.selected            = set;
+        this.selected_private    = set;
         this.return_hidden.value = set._return;
 
         this.$.query.value  = "";
@@ -281,43 +304,83 @@ Example:
         return false;
     },
 
-    preventx: function(e) {
 
-        if (  (e.keyCode || e.which || e.charCode || 0) == 13 ) {
+    handledown: function(e) { 
+
+        if (  (e.keyCode || e.which || e.charCode || 0) == 13 ) {       // Enter
+            
             this.select_enter(e);
+
+        } else if (  (e.keyCode || e.which || e.charCode || 0) == 9 ) { // Tab
+
+           // this.select_leave(e);
+
+        } else if ( ( e.keyCode || e.which || e.charCode || 0 ) == 27 ) {   // Escape
+
+            this.select_esc(e);
+
+        } else {
+
         }
     },
 
+    handleup: function(e) { 
+       
+        if (  (e.keyCode || e.which || e.charCode || 0) == 13 ) {       // Enter
+        } else if (  (e.keyCode || e.which || e.charCode || 0) == 9 ) { // Tab
+        } else if ( ( e.keyCode || e.which || e.charCode || 0 ) == 27 ) {   // Escape
+
+        } else {
+
+            this.setajax();
+        }
+    },
+
+
     setajax: function(e) {
-        
-        e.preventDefault();
-       
+            
+        var these = this;
+
         if( this.query !== this.$.query.value ) {      
-        
+
+            var requests = these.$.backend.activeRequests;
+
+            requests.forEach( function(request) {
+                request.abort();
+                //these.$.backend.discardRequest(request);
+            });        
+            
             this.query = this.$.query.value;
-       
-            this.$.backend.params = { query: this.query };
+
+            var uri    = new URI(this.backend);
+            var params = uri.search(true);
+            params.query = this.query;
+
+            this.$.backend.url    = uri.query("").toString();
+            this.$.backend.params = params;
             this.$.backend.generateRequest();
         }
 
         return false;
     },
 
-    reset: function(e) {
+   select_leave: function(e) {
 
-        e.preventDefault();
+        var these = this;
 
-        this.return_hidden.value = "";
-        this.selected            = undefined;
-        this.items               = [];
-    
-        if ( this.hide_on_select === true ) {
-            this.$.query.style.display = "inline-block";
-            this.$.query.focus();
+        var requests = these.$.backend.activeRequests;
+
+        requests.forEach( function(request) {
+              request.abort();
+        });
+
+        this.items = [];
+
+        if ( this.selected_private !== undefined ) { 
+
+            this.reset_to_preset(); 
         }
-
-        return false;
-    },
+   },
 
     hresponse: function(request) {
 
@@ -325,6 +388,60 @@ Example:
 
             this.items       = request.detail.response.items;
             this.update_items();
+        }
+    },
+
+    // Reset to empty field and value
+    reset_to_null: function(e) {
+
+        e.preventDefault();
+
+        this.return_hidden.value = "";
+        this.items               = [];
+        this.selected_private    = undefined;
+        this.selected            = undefined;
+
+
+        if ( this.hide_on_select === true ) {
+
+            this.$.query.style.display = "inline-block";
+            this.$.query.focus();
+        }
+
+        return false;
+    },
+
+
+    show_input: function() {
+
+        this.selected_private    = undefined;
+
+        if ( this.hide_on_select === true ) {
+
+            this.$.query.style.display = "inline-block";
+            this.$.query.focus();
+        }
+
+        return false;
+ 
+    },
+
+    // Reset to 
+    reset_to_preset: function() {
+        
+        if ( this.hide_on_select  && typeof this.selected === "object" )  {
+
+            this.$.query.style.display = "none";
+
+            this.return_hidden.value    = this.template_return.parse(this.selected);
+            this.selected._title        = this.template_title.parse(this.selected);
+            this.selected._return       = this.template_return.parse(this.selected);
+        
+            this.selected_private = this.selected;
+
+        } else {
+
+            this.reset_to_null;
         }
     },
 
@@ -350,7 +467,13 @@ Example:
         * 'selected' the current selected object
         */ 
         selected:  Object,
-        
+       
+
+        /**
+          *
+          */
+        selected_private: Object,
+
         /**
         * 'items' the list of items
         */        
@@ -415,23 +538,14 @@ Example:
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
 
-        this.$.backend.url = this.backend;
 
         this.return_hidden =  Polymer.dom(this).querySelector('input');
 
         this.template_return = new Template(this.format_return);
         this.template_title = new Template(this.format_title);
-            
 
-        if ( this.hide_on_select  && typeof this.selected === "object" )  {
-
-            this.$.query.style.display = "none";
-
-            this.return_hidden.value     = this.template_return.parse(this.selected);
-            this.selected._title  = this.template_title.parse(this.selected);
-            this.selected._return = this.template_return.parse(this.selected);
-         }
-
+        // Auf Vorgabe setzen
+        this.reset_to_preset();
     },
 
     detached: function() {
