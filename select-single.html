@@ -29,7 +29,7 @@ Example:
     :host {
       display: inline-block;
       box-sizing: border-box;
-      width: 300px;
+      width: 400px;
       cursor: pointer;
     }
 
@@ -91,7 +91,27 @@ Example:
         box-shadow: 10px 9px 40px -2px rgba(217,217,217,1);
         background: #fff;
         max-height: 200px;
-        overflow-y: scroll;
+        overflow-y: auto;
+        background: #FFFFD7;
+    }
+
+    #message {
+        position: absolute;
+        top: 25px;
+        left: 0;
+        width: 500px;
+        padding: 0;
+        z-index: 99999;
+        box-shadow: 10px 9px 40px -2px rgba(217,217,217,1);
+        background: #fff;
+        color: #900;
+        font-weight: bold;
+        line-height: 20px;
+    }
+
+    #result.hide {
+
+        display: none;
     }
 
    
@@ -99,6 +119,12 @@ Example:
       border: 1px solid #EEE;
       padding: 2px 2px 2px 6px ;
       display: block;
+   }
+
+   small {
+    
+       font-size: 80%;
+       color: #999;
    }
 
 </style>
@@ -111,7 +137,7 @@ Example:
        
         <div id="selected" on-click="show_input">
 
-            <strong >{{selected_private._title}}</strong>
+            <strong >{{selected_private._title}}</strong> <small>{{selected_private._description }}</small>
             <button type="button" class="delete" on-click="reset_to_null">X</button>
         </div>
 
@@ -121,10 +147,15 @@ Example:
     <div id="container">
 
         <input id="query" on-keyup="handleup" on-keydown="handledown" type="text" value="" placeholder$="{{placeholder}}" autocomplete="off"/>
-
+        
+        <div id="message">
+            <template is="dom-if" if="{{message}}">
+            <strong>{{message}}</strong>    
+            </template>
+        </div>
 
         <div id="result"><template id="resultlist" is="dom-repeat" items="{{items}}">
-            <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}">[[item._title]]</span>
+                <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}"><span>[[item._title]]</span> <small>[[ item._description ]]</small></span>
         </template></div>
 
     </div>
@@ -199,7 +230,8 @@ Example:
 
         these.items.forEach(function(item,idx,arr) {
 
-            item._title = these.template_title.parse(item);
+            item._title         = these.template_title.parse(item);
+            item._description   = these.template_description.parse(item);
 
             item.class = "item";
 
@@ -248,10 +280,9 @@ Example:
 
     select_set: function(set) {
 
-        console.log("Select set");
-
         set._return = this.template_return.parse(set);
         set._title  = this.template_title.parse(set);
+        set._description = this.template_description.parse(set);
 
         this.selected_private    = set;
         this.return_hidden.value = set._return;
@@ -307,13 +338,15 @@ Example:
 
     handledown: function(e) { 
 
+        this.message = undefined;
+
         if (  (e.keyCode || e.which || e.charCode || 0) == 13 ) {       // Enter
             
             this.select_enter(e);
 
         } else if (  (e.keyCode || e.which || e.charCode || 0) == 9 ) { // Tab
 
-           // this.select_leave(e);
+           this.select_leave(e);
 
         } else if ( ( e.keyCode || e.which || e.charCode || 0 ) == 27 ) {   // Escape
 
@@ -326,6 +359,8 @@ Example:
 
     handleup: function(e) { 
        
+        this.message = undefined;
+
         if (  (e.keyCode || e.which || e.charCode || 0) == 13 ) {       // Enter
         } else if (  (e.keyCode || e.which || e.charCode || 0) == 9 ) { // Tab
         } else if ( ( e.keyCode || e.which || e.charCode || 0 ) == 27 ) {   // Escape
@@ -336,6 +371,14 @@ Example:
         }
     },
 
+
+    handleblur: function(e) {
+
+        this.message = undefined;
+
+        this.select_leave(e);
+
+    },
 
     setajax: function(e) {
             
@@ -356,6 +399,8 @@ Example:
             var params = uri.search(true);
             params.query = this.query;
 
+            this.message = "Searching …";
+
             this.$.backend.url    = uri.query("").toString();
             this.$.backend.params = params;
             this.$.backend.generateRequest();
@@ -367,6 +412,8 @@ Example:
    select_leave: function(e) {
 
         var these = this;
+
+        this.message = undefined;
 
         var requests = these.$.backend.activeRequests;
 
@@ -386,8 +433,23 @@ Example:
 
         if ( request.detail.response !== null ) { 
 
+            this.message = "";
+
+
             this.items       = request.detail.response.items;
             this.update_items();
+
+            if ( this.items.length === 0) {
+            
+                this.message = "No matching entry found.";
+            
+            } else {
+
+                this.message = undefined;
+            }
+
+        } else {
+
         }
     },
 
@@ -436,7 +498,8 @@ Example:
             this.return_hidden.value    = this.template_return.parse(this.selected);
             this.selected._title        = this.template_title.parse(this.selected);
             this.selected._return       = this.template_return.parse(this.selected);
-        
+            this.selected._description  = this.template_description.parse(this.selected);
+         
             this.selected_private = this.selected;
 
         } else {
@@ -487,6 +550,8 @@ Example:
         */
         backend:    String,
         
+        message:    String,
+        
         /**
           * 
           */
@@ -507,6 +572,12 @@ Example:
         format_title: {
             type: String,
             value: "#{title}",
+        },
+
+        format_description: {
+
+            type: String,
+            value: "#{description}",
         },
 
         placeholder: {
@@ -538,14 +609,19 @@ Example:
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
 
+        var these = this;
 
         this.return_hidden =  Polymer.dom(this).querySelector('input');
 
-        this.template_return = new Template(this.format_return);
-        this.template_title = new Template(this.format_title);
+        this.template_return        = new Template(this.format_return);
+        this.template_title         = new Template(this.format_title);
+        this.template_description   = new Template(this.format_description);
 
         // Auf Vorgabe setzen
         this.reset_to_preset();
+
+        window.addEventListener('click', these.select_leave.bind(these) );
+    
     },
 
     detached: function() {
@@ -553,6 +629,9 @@ Example:
       // removed from a document.
       //
       // Use this to clean up anything you did in `attached`.
+
+      window.removeEventListener('click', these.select_leave.bind(these));
+
     },
 
     // Element Behavior
