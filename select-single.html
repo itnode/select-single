@@ -155,7 +155,7 @@ Example:
         </div>
 
         <div id="result"><template id="resultlist" is="dom-repeat" items="{{items}}">
-                <span class$="[[arrayItem(items.*,index,'class')]]"  ><span on-click="select_click" result-id$="{{ index }}">[[item._title]]</span> <small on-click="select_click" result-id$="{{ index }}">[[ item._description ]]</small></span>
+                <span class$="[[arrayItem(items.*,index,'class')]]"  on-click="select_click" result-id$="{{ index }}"><span on-click="select_click" result-id$="{{ index }}">[[item._title]]</span> <small on-click="select_click" result-id$="{{ index }}">[[ item._description ]]</small></span>
         </template></div>
 
     </div>
