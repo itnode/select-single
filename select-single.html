@@ -280,6 +280,10 @@ Example:
 
     select_set: function(set) {
 
+        if ( set === undefined) {
+            return false
+        }
+
         set._return = this.template_return.parse(set);
         set._title  = this.template_title.parse(set);
         set._description = this.template_description.parse(set);
@@ -294,6 +298,8 @@ Example:
         if ( this.hide_on_select === true )  {
             this.$.query.style.display = "none";
         }
+
+        this.fire("select-single-set", set);
 
         return false;
     },
@@ -470,6 +476,8 @@ Example:
             this.$.query.focus();
         }
 
+        this.fire("select-single-set", {});
+
         return false;
     },
 
@@ -501,6 +509,8 @@ Example:
             this.selected._description  = this.template_description.parse(this.selected);
          
             this.selected_private = this.selected;
+
+            this.fire("select-single-set", this.selected);
 
         } else {
 
@@ -616,6 +626,7 @@ Example:
         this.template_return        = new Template(this.format_return);
         this.template_title         = new Template(this.format_title);
         this.template_description   = new Template(this.format_description);
+       
 
         // Auf Vorgabe setzen
         this.reset_to_preset();
