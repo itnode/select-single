@@ -295,7 +295,7 @@ Example:
         this.query          = "";
         this.items          = [];
 
-        if ( this.hide_on_select === true )  {
+        if ( this.hideOnSelect === true )  {
             this.$.query.style.display = "none";
         }
 
@@ -470,7 +470,7 @@ Example:
         this.selected            = undefined;
 
 
-        if ( this.hide_on_select === true ) {
+        if ( this.hideOnSelect === true ) {
 
             this.$.query.style.display = "inline-block";
             this.$.query.focus();
@@ -486,7 +486,7 @@ Example:
 
         this.selected_private    = undefined;
 
-        if ( this.hide_on_select === true ) {
+        if ( this.hideOnSelect === true ) {
 
             this.$.query.style.display = "inline-block";
             this.$.query.focus();
@@ -499,9 +499,11 @@ Example:
     // Reset to 
     reset_to_preset: function() {
         
-        if ( this.hide_on_select  && typeof this.selected === "object" )  {
+        if ( this.hideOnSelect  && typeof this.selected === "object" )  {
 
             this.$.query.style.display = "none";
+
+            var current = this.return_hidden.value;
 
             this.return_hidden.value    = this.template_return.parse(this.selected);
             this.selected._title        = this.template_title.parse(this.selected);
@@ -510,7 +512,9 @@ Example:
          
             this.selected_private = this.selected;
 
-            this.fire("select-single-set", this.selected);
+            if ( current != this.return_hidden.value ) { 
+                this.fire("select-single-set", this.selected);
+            }
 
         } else {
 
@@ -528,9 +532,9 @@ Example:
 
 
         /**
-          * 'hide_on_select' - when selected, hide input
+          * 'hideOnSelect' - when selected, hide input
           */
-        hide_on_select: {
+        hideOnSelect: {
 
             type: Boolean,
             value: true,
@@ -573,18 +577,18 @@ Example:
          * 'format' default id
         */
 
-        format_return: { 
+        formatReturn: { 
             
             type: String,
             value: "#{id}"
         },
 
-        format_title: {
+        formatTitle: {
             type: String,
             value: "#{title}",
         },
 
-        format_description: {
+        formatDescription: {
 
             type: String,
             value: "#{description}",
@@ -623,13 +627,15 @@ Example:
 
         this.return_hidden =  Polymer.dom(this).querySelector('input');
 
-        this.template_return        = new Template(this.format_return);
-        this.template_title         = new Template(this.format_title);
-        this.template_description   = new Template(this.format_description);
+        this.template_return        = new Template(this.formatReturn);
+        this.template_title         = new Template(this.formatTitle);
+        this.template_description   = new Template(this.formatDescription);
        
 
         // Auf Vorgabe setzen
         this.reset_to_preset();
+
+        this.fire("select-single-set", this.selected );
 
         window.addEventListener('click', these.select_leave.bind(these) );
     
