@@ -146,7 +146,7 @@ Example:
 
     <div id="container">
 
-        <input id="query" on-keyup="handleup" on-keydown="handledown" type="text" value="" placeholder$="{{placeholder}}" autocomplete="off"/>
+        <input id="query" on-keyup="handleup" on-keydown="handledown" type="text" autofocus="{{autofocus}}" value="" placeholder$="{{placeholder}}" autocomplete="off"/>
         
         <div id="message">
             <template is="dom-if" if="{{message}}">
@@ -530,6 +530,10 @@ Example:
        */
         multiple:  Boolean,
 
+        autofocus: {
+            type: Boolean,
+            value: false
+        },
 
         /**
           * 'hideOnSelect' - when selected, hide input
