@@ -138,7 +138,7 @@ Example:
         <div id="selected" on-click="show_input">
 
             <strong >{{selected_private._title}}</strong> <small>{{selected_private._description }}</small>
-            <button type="button" class="delete" on-click="reset_to_null">X</button>
+            <button type="button" name="reset_value" class="delete" on-click="reset_to_null">X</button>
         </div>
 
     </template>
@@ -218,6 +218,24 @@ Example:
 }(this));
 
 
+function upTo(el, tagName) {
+  tagName = tagName.toLowerCase();
+
+  while (el && el.parentNode) {
+    el = el.parentNode;
+    if (el.tagName && el.tagName.toLowerCase() == tagName) {
+      return el;
+    }
+  }
+
+  // Many DOM methods return null if they don't 
+  // find the element they are searching for
+  // It would be OK to omit the following and just
+  // return undefined
+  return null;
+}
+
+
   Polymer({
 
     is: 'select-single',
@@ -294,12 +312,19 @@ Example:
         this.$.query.value  = "";
         this.query          = "";
         this.items          = [];
-
+       
         if ( this.hideOnSelect === true )  {
             this.$.query.style.display = "none";
         }
 
+        if ( this.nextElement ) { 
+
+            console.log(this.nextElement);       
+             this.nextElement.focus(); 
+        }       
+
         this.fire("select-single-set", set);
+
 
         return false;
     },
@@ -476,6 +501,7 @@ Example:
             this.$.query.focus();
         }
 
+
         this.fire("select-single-set", {});
 
         return false;
@@ -629,12 +655,38 @@ Example:
 
         var these = this;
 
+
+        // Get next Element for auto focus
         this.return_hidden =  Polymer.dom(this).querySelector('input');
+
+        var current_name = this.return_hidden.name;
+        var form = upTo(this,'form').elements;
+        var forEach = Array.prototype.forEach;
+
+        var found  = false;
+        var foundi = 0;
+
+        forEach.call(form, function(x) {
+ 
+            if ( found === true ) {
+
+                foundi++;
+
+                if ( foundi == 2 ) {
+                    these.nextElement = x ;
+                }
+            }
+
+            if ( current_name === x.name && x.name !== undefined ) {
+                found = true;
+            }
+        });
+            
+
 
         this.template_return        = new Template(this.formatReturn);
         this.template_title         = new Template(this.formatTitle);
         this.template_description   = new Template(this.formatDescription);
-       
 
         // Auf Vorgabe setzen
         this.reset_to_preset();
