@@ -28,5 +28,25 @@
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^3.0.1",
     "web-component-tester": "*"
+  },
+  "variants": {
+    "1.x": {
+      "dependencies": {
+	"polymer": "Polymer/polymer#^1.0.0",
+	"iron-ajax": "PolymerElements/iron-ajax",
+	"iron-a11y-keys": "PolymerElements/iron-a11y-keys#~1.0.2",
+	"uri.js": "~1.16.0"
+      },
+      "devDependencies": {
+	"iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+	"web-component-tester": "*"
+      },
+      "resolutions": {
+        "webcomponentsjs": "^0.7"
+      }
+    }
+  },
+  "resolutions": {
+    "webcomponentsjs": "^1.0.0"
   }
 }

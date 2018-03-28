@@ -18,7 +18,7 @@ An element providing a solution to no problem in particular.
 Example:
 
     <select-single selected="" backend="http://demo9131812.mockable.io/items">
-        <input type="hidden" name="member_id" /> 
+        <input type="hidden" name="member_id" />
     </select-single>
 
 @demo
@@ -35,7 +35,7 @@ Example:
     }
 
     * {
-      
+
         box-sizing: border-box;
 
     }
@@ -44,11 +44,11 @@ Example:
 
         display: inline;
     }
-        
+
     .delete {
 
         margin: 0 0 0 6px;
-        float: right;         
+        float: right;
     }
 
     .item {
@@ -82,12 +82,12 @@ Example:
 
     #container {
         position: relative;
-    }  
+    }
 
     #container input {
         display: inline-block;
 
-    }   
+    }
 
     #result {
         position: absolute;
@@ -122,7 +122,7 @@ Example:
         display: none;
     }
 
-   
+
     #selected {
       border: 1px solid #EEE;
       padding: 2px 2px 2px 6px ;
@@ -130,18 +130,18 @@ Example:
    }
 
    small {
-    
+
        font-size: 80%;
        color: #999;
    }
 
 </style>
 
-   
-    <content></content>
+
+    <slot></slot>
 
     <template is="dom-if" if="{{selected_private}}">
-       
+
         <div id="selected" on-click="show_input">
 
             <strong >{{selected_private._title}}</strong> <small>{{selected_private._description }}</small>
@@ -149,15 +149,15 @@ Example:
         </div>
 
     </template>
-   
+
 
     <div id="container">
 
         <input id="query" on-keyup="handleup" on-keydown="handledown" type="text" autofocus="{{autofocus}}" value="" placeholder$="{{placeholder}}" autocomplete="off"/>
-        
+
         <div id="message">
             <template is="dom-if" if="{{message}}">
-            <strong>{{message}}</strong>    
+            <strong>{{message}}</strong>
             </template>
         </div>
 
@@ -171,7 +171,7 @@ Example:
     id="backend"
     handle-as="json"
     on-response="hresponse"
-    debounce-duration="150"></iron-ajax> 
+    debounce-duration="150"></iron-ajax>
 
     <iron-a11y-keys target="[[target]]" keys="pagedown down" on-keys-pressed="select_down"></iron-a11y-keys>
     <iron-a11y-keys target="[[target]]" keys="pageup up"     on-keys-pressed="select_up"></iron-a11y-keys>
@@ -235,7 +235,7 @@ function upTo(el, tagName) {
     }
   }
 
-  // Many DOM methods return null if they don't 
+  // Many DOM methods return null if they don't
   // find the element they are searching for
   // It would be OK to omit the following and just
   // return undefined
@@ -250,23 +250,23 @@ function upTo(el, tagName) {
     update_items: function() {
 
         var these = this;
-       
+
         var new_items = [];
 
         these.items.forEach(function(item,idx,arr) {
 
             item._title         = these.template_title.parse(item);
             item._description   = these.template_description.parse(item);
-            
+
             item.class = "item";
 
             if ( idx === these.preselected ) {
 
                 item.class = "item active";
             }
-        
+
             these.set('items.'+idx+ '.class' ,item.class);
-            
+
         });
     },
 
@@ -277,14 +277,14 @@ function upTo(el, tagName) {
     },
 
     select_enter: function(e) {
-       
+
         e.preventDefault();
         var idx             = this.preselected;
         this.select_set(this.items[idx]);
         return false;
     },
 
-    
+
     select_click: function(e) {
 
         e.preventDefault();
@@ -320,15 +320,15 @@ function upTo(el, tagName) {
         this.$.query.value  = "";
         this.query          = "";
         this.items          = [];
-       
+
         if ( this.hideOnSelect === true )  {
             this.$.query.style.display = "none";
         }
 
-        if ( this.nextElement ) { 
+        if ( this.nextElement ) {
 
-             this.nextElement.focus(); 
-        }       
+             this.nextElement.focus();
+        }
 
         this.fire("select-single-set", set);
 
@@ -339,47 +339,47 @@ function upTo(el, tagName) {
 
     select_down: function(e) {
 
-        if (this.items.length === 0) 
+        if (this.items.length === 0)
             return;
 
         if (this.preselected < (this.items.length - 1 )) {
-        
+
             this.preselected++;
 
-        } else { 
+        } else {
 
             this.preselected = -1;
         }
-            
+
         this.update_items();
-        
-            
+
+
         return false;
     },
 
 
     select_up: function(e) {
 
-        if (this.items.length === 0) 
+        if (this.items.length === 0)
             return;
-            
+
         if (this.preselected > -1) {
-         
-            this.preselected--; 
+
+            this.preselected--;
         }
 
         this.update_items();
-        
+
         return false;
     },
 
 
-    handledown: function(e) { 
+    handledown: function(e) {
 
         this.message = undefined;
 
         if (  (e.keyCode || e.which || e.charCode || 0) == 13 ) {       // Enter
-            
+
             this.select_enter(e);
 
         } else if (  (e.keyCode || e.which || e.charCode || 0) == 9 ) { // Tab
@@ -395,8 +395,8 @@ function upTo(el, tagName) {
         }
     },
 
-    handleup: function(e) { 
-       
+    handleup: function(e) {
+
         this.message = undefined;
 
         if (  (e.keyCode || e.which || e.charCode || 0) == 13 ) {       // Enter
@@ -419,18 +419,18 @@ function upTo(el, tagName) {
     },
 
     setajax: function(e) {
-            
+
         var these = this;
 
-        if( this.query !== this.$.query.value ) {      
+        if( this.query !== this.$.query.value ) {
 
             var requests = these.$.backend.activeRequests;
 
             requests.forEach( function(request) {
                 request.abort();
                 //these.$.backend.discardRequest(request);
-            });        
-            
+            });
+
             this.query = this.$.query.value;
 
             var uri    = new URI(this.backend);
@@ -461,15 +461,15 @@ function upTo(el, tagName) {
 
         this.items = [];
 
-        if ( this.selected_private !== undefined ) { 
+        if ( this.selected_private !== undefined ) {
 
-            this.reset_to_preset(); 
+            this.reset_to_preset();
         }
    },
 
     hresponse: function(request) {
 
-        if ( request.detail.response !== null ) { 
+        if ( request.detail.response !== null ) {
 
             this.message = "";
 
@@ -478,9 +478,9 @@ function upTo(el, tagName) {
             this.update_items();
 
             if ( this.items.length === 0) {
-            
+
                 this.message = "No matching entry found.";
-            
+
             } else {
 
                 this.message = undefined;
@@ -526,12 +526,12 @@ function upTo(el, tagName) {
         }
 
         return false;
- 
+
     },
 
-    // Reset to 
+    // Reset to
     reset_to_preset: function() {
-        
+
         if ( this.hideOnSelect  && typeof this.selected === "object" )  {
 
             this.$.query.style.display = "none";
@@ -542,10 +542,10 @@ function upTo(el, tagName) {
             this.selected._title        = this.template_title.parse(this.selected);
             this.selected._return       = this.template_return.parse(this.selected);
             this.selected._description  = this.template_description.parse(this.selected);
-         
+
             this.selected_private = this.selected;
 
-            if ( current != this.return_hidden.value ) { 
+            if ( current != this.return_hidden.value ) {
                 this.fire("select-single-set", this.selected);
             }
 
@@ -579,9 +579,9 @@ function upTo(el, tagName) {
 
         /**
         * 'selected' the current selected object
-        */ 
+        */
         selected:  Object,
-       
+
 
         /**
           *
@@ -590,21 +590,21 @@ function upTo(el, tagName) {
 
         /**
         * 'items' the list of items
-        */        
+        */
         items:    {
             type:   Array,
             notify: true
         },
-        
-        /** 
+
+        /**
           * 'backend' - URL for the backend
         */
         backend:    String,
-        
+
         message:    String,
-        
+
         /**
-          * 
+          *
           */
         preselected: Number,
 
@@ -614,8 +614,8 @@ function upTo(el, tagName) {
          * 'format' default id
         */
 
-        formatReturn: { 
-            
+        formatReturn: {
+
             type: String,
             value: "#{id}"
         },
@@ -637,10 +637,10 @@ function upTo(el, tagName) {
             value: "Type for search",
         }
 
-        
+
     },
 
- 
+
     // Element Lifecycle
 
     ready: function() {
@@ -675,7 +675,7 @@ function upTo(el, tagName) {
         var foundi = 0;
 
         forEach.call(form, function(x) {
- 
+
             if ( found === true ) {
 
                 foundi++;
@@ -689,7 +689,7 @@ function upTo(el, tagName) {
                 found = true;
             }
         });
-            
+
 
 
         this.template_return        = new Template(this.formatReturn);
@@ -702,7 +702,7 @@ function upTo(el, tagName) {
         this.fire("select-single-set", this.selected );
 
         window.addEventListener('click', these.select_leave.bind(these) );
-    
+
     },
 
     detached: function() {
@@ -716,7 +716,7 @@ function upTo(el, tagName) {
     },
 
     // Element Behavior
-  
+
   });
 
 </script>
