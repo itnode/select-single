@@ -1,0 +1,961 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <select-single selected=\"\" backend=\"http://demo9131812.mockable.io/items\">\n        <input type=\"hidden\" name=\"member_id\" />\n    </select-single>",
+      "summary": "",
+      "path": "select-single.html",
+      "properties": [
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "description": "`multiple` indicates that the element should handle more then one value.\nNOT IMPLEMENTED",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 563,
+              "column": 8
+            },
+            "end": {
+              "line": 563,
+              "column": 26
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "autofocus",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 565,
+              "column": 8
+            },
+            "end": {
+              "line": 568,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "hideOnSelect",
+          "type": "boolean",
+          "description": "'hideOnSelect' - when selected, hide input",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 573,
+              "column": 8
+            },
+            "end": {
+              "line": 577,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "true"
+        },
+        {
+          "name": "selected",
+          "type": "Object",
+          "description": "'selected' the current selected object",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 582,
+              "column": 8
+            },
+            "end": {
+              "line": 582,
+              "column": 25
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "selected_private",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 588,
+              "column": 8
+            },
+            "end": {
+              "line": 588,
+              "column": 32
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "items",
+          "type": "Array",
+          "description": "'items' the list of items",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 593,
+              "column": 8
+            },
+            "end": {
+              "line": 596,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          }
+        },
+        {
+          "name": "backend",
+          "type": "string",
+          "description": "'backend' - URL for the backend",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 601,
+              "column": 8
+            },
+            "end": {
+              "line": 601,
+              "column": 26
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 603,
+              "column": 8
+            },
+            "end": {
+              "line": 603,
+              "column": 26
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "preselected",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 608,
+              "column": 8
+            },
+            "end": {
+              "line": 608,
+              "column": 27
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 610,
+              "column": 8
+            },
+            "end": {
+              "line": 610,
+              "column": 21
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "formatReturn",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 616,
+              "column": 8
+            },
+            "end": {
+              "line": 620,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"#{id}\""
+        },
+        {
+          "name": "formatTitle",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 622,
+              "column": 8
+            },
+            "end": {
+              "line": 625,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"#{title}\""
+        },
+        {
+          "name": "formatDescription",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 627,
+              "column": 8
+            },
+            "end": {
+              "line": 631,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"#{description}\""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 633,
+              "column": 8
+            },
+            "end": {
+              "line": 637,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Type for search\""
+        }
+      ],
+      "methods": [
+        {
+          "name": "update_items",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 249,
+              "column": 4
+            },
+            "end": {
+              "line": 270,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "arrayItem",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 272,
+              "column": 4
+            },
+            "end": {
+              "line": 276,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "change"
+            },
+            {
+              "name": "index"
+            },
+            {
+              "name": "path"
+            }
+          ]
+        },
+        {
+          "name": "select_enter",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 278,
+              "column": 4
+            },
+            "end": {
+              "line": 284,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "select_click",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 287,
+              "column": 4
+            },
+            "end": {
+              "line": 293,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "select_esc",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 295,
+              "column": 4
+            },
+            "end": {
+              "line": 303,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "select_set",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 305,
+              "column": 4
+            },
+            "end": {
+              "line": 336,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "set"
+            }
+          ]
+        },
+        {
+          "name": "select_down",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 339,
+              "column": 4
+            },
+            "end": {
+              "line": 357,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "select_up",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 360,
+              "column": 4
+            },
+            "end": {
+              "line": 373,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "handledown",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 376,
+              "column": 4
+            },
+            "end": {
+              "line": 395,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "handleup",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 397,
+              "column": 4
+            },
+            "end": {
+              "line": 409,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "handleblur",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 412,
+              "column": 4
+            },
+            "end": {
+              "line": 418,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "setajax",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 420,
+              "column": 4
+            },
+            "end": {
+              "line": 447,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "select_leave",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 449,
+              "column": 3
+            },
+            "end": {
+              "line": 467,
+              "column": 4
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "hresponse",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 469,
+              "column": 4
+            },
+            "end": {
+              "line": 491,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "request"
+            }
+          ]
+        },
+        {
+          "name": "reset_to_null",
+          "description": "Reset to empty field and value",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 494,
+              "column": 4
+            },
+            "end": {
+              "line": 514,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "show_input",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 517,
+              "column": 4
+            },
+            "end": {
+              "line": 529,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "reset_to_preset",
+          "description": "Reset to",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 532,
+              "column": 4
+            },
+            "end": {
+              "line": 555,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 645,
+              "column": 4
+            },
+            "end": {
+              "line": 652,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 654,
+              "column": 4
+            },
+            "end": {
+              "line": 705,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 707,
+              "column": 4
+            },
+            "end": {
+              "line": 715,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 245,
+          "column": 10
+        },
+        "end": {
+          "line": 719,
+          "column": 3
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "multiple",
+          "description": "`multiple` indicates that the element should handle more then one value.\nNOT IMPLEMENTED",
+          "sourceRange": {
+            "start": {
+              "line": 563,
+              "column": 8
+            },
+            "end": {
+              "line": 563,
+              "column": 26
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "autofocus",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 565,
+              "column": 8
+            },
+            "end": {
+              "line": 568,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "hide-on-select",
+          "description": "'hideOnSelect' - when selected, hide input",
+          "sourceRange": {
+            "start": {
+              "line": 573,
+              "column": 8
+            },
+            "end": {
+              "line": 577,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "selected",
+          "description": "'selected' the current selected object",
+          "sourceRange": {
+            "start": {
+              "line": 582,
+              "column": 8
+            },
+            "end": {
+              "line": 582,
+              "column": 25
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "selected_private",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 588,
+              "column": 8
+            },
+            "end": {
+              "line": 588,
+              "column": 32
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "items",
+          "description": "'items' the list of items",
+          "sourceRange": {
+            "start": {
+              "line": 593,
+              "column": 8
+            },
+            "end": {
+              "line": 596,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "backend",
+          "description": "'backend' - URL for the backend",
+          "sourceRange": {
+            "start": {
+              "line": 601,
+              "column": 8
+            },
+            "end": {
+              "line": 601,
+              "column": 26
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "message",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 603,
+              "column": 8
+            },
+            "end": {
+              "line": 603,
+              "column": 26
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "preselected",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 608,
+              "column": 8
+            },
+            "end": {
+              "line": 608,
+              "column": 27
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "query",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 610,
+              "column": 8
+            },
+            "end": {
+              "line": 610,
+              "column": 21
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "format-return",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 616,
+              "column": 8
+            },
+            "end": {
+              "line": 620,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "format-title",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 622,
+              "column": 8
+            },
+            "end": {
+              "line": 625,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "format-description",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 627,
+              "column": 8
+            },
+            "end": {
+              "line": 631,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "placeholder",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 633,
+              "column": 8
+            },
+            "end": {
+              "line": 637,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "items-changed",
+          "description": "Fired when the `items` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [
+        {
+          "description": "",
+          "name": "",
+          "range": {
+            "file": "select-single.html",
+            "start": {
+              "line": 140,
+              "column": 4
+            },
+            "end": {
+              "line": 140,
+              "column": 17
+            }
+          }
+        }
+      ],
+      "tagname": "select-single"
+    }
+  ]
+}
