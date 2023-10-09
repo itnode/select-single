@@ -51,21 +51,31 @@ Example:
         float: right;
     }
 
+    .item:first-child {
+        border-top: none;
+    }
+
     .item {
 
-        border-top: 1px solid #eee;
-        padding: 3px;
+        border-top: 1px solid #ddd;
+        padding: 6px 10px;
         margin: 0;
         display: block;
         cursor: pointer;
         background: #fff;
         text-align: left;
+        
+        line-height: 180%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     input {
 
         width: 100%;
         display: inline-block;
+        background: #f0f0f0;
     }
 
     input:focus {
@@ -77,7 +87,7 @@ Example:
     .item:hover,
     .item:focus {
 
-        background: #eee;
+        background: #f0f0f0;
     }
 
     #container {
@@ -91,7 +101,7 @@ Example:
 
     #result {
         position: absolute;
-        top: 20px;
+        /*top: 24px;*/
         left: 0;
         width: 500px;
         padding: 0;
@@ -105,7 +115,7 @@ Example:
 
     #message {
         position: absolute;
-        top: 25px;
+        /*top: 25px;*/
         left: 0;
         width: 500px;
         padding: 0;
@@ -122,7 +132,6 @@ Example:
         display: none;
     }
 
-
     #selected {
       border: 1px solid #EEE;
       padding: 2px 2px 2px 6px ;
@@ -130,9 +139,8 @@ Example:
    }
 
    small {
-
-       font-size: 80%;
-       color: #999;
+       font-size: 85%;
+       color: #555;
    }
 
 </style>

@@ -15,6 +15,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <title>select-single Demo</title>
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../select-single.html">
+    
+    <link rel="stylesheet" href="style.css">
+      <style>
+      html {
+        background: #fff !important;
+      }
+    </style>
   </head>
   <body>
 
@@ -23,11 +30,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <form method="get">
         
 
-        <select-single backend="http://private-c3fe6-selectsingle.apiary-mock.com/items?hello=world" selected='{"title": "Lord Meowser", "id": "9999" }'>
+        <select-single placeholder="Type for search" backend="demo.json" >
             <input type="hidden" name="member_id" value="" />
         </select-single>
     
-
+        <br/><br/>
         <button type="submit">Submit </button>
 
     </form>
